@@ -1,9 +1,9 @@
-import torch
+from unsloth import FastLanguageModel
 
-# Check CUDA availability
-print("CUDA Available:", torch.cuda.is_available())
-
-# Perform a simple GPU computation
-x = torch.tensor([1.0, 2.0, 3.0]).cuda()
-y = torch.tensor([4.0, 5.0, 6.0]).cuda()
-print("GPU Computation:", (x + y).cpu())
+model = FastLanguageModel.from_pretrained(
+    "unsloth/Meta-Llama-3.1-8B-bnb-4bit",
+    max_seq_length=2048,
+    dtype=None,
+    load_in_4bit=True
+)
+print("Model loaded successfully.")
