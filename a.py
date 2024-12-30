@@ -1,3 +1,9 @@
 import torch
-print(torch.cuda.is_available())  # Should return True
-print(torch.version.cuda)        # Should match your CUDA version
+import torchvision
+import torchaudio
+
+print("PyTorch Version:", torch.__version__)
+print("Torchvision Version:", torchvision.__version__)
+print("Torchaudio Version:", torchaudio.__version__)
+print("CUDA Available:", torch.cuda.is_available())
+print("CUDA Version:", torch.version.cuda)
