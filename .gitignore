@@ -6,3 +6,4 @@
 *.bin
 *.pth
 *.obj
+*.gguf

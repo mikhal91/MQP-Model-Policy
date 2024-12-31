@@ -134,11 +134,10 @@ tokenizer.save_pretrained("lora_model")
 model.push_to_hub(huggingface_model_name, token = token)
 tokenizer.push_to_hub(huggingface_model_name, token = token)
 
+
 # Merge to 16bit
-if True:
-    model.save_pretrained_merged("model", tokenizer, save_method="merged_16bit",)
-if True:
-    model.push_to_hub_merged(huggingface_model_name, tokenizer, save_method="merged_16bit", token=token)
+if True: model.save_pretrained_merged("model", tokenizer, save_method = "merged_16bit",)
+if True: model.push_to_hub_merged(huggingface_model_name, tokenizer, save_method = "merged_16bit", token = token)
 
 # # Merge to 4bit
 # if True:
@@ -146,17 +145,19 @@ if True:
 # if True:
 #     model.push_to_hub_merged(huggingface_model_name, tokenizer, save_method="merged_4bit", token=token)
 
+
+
 # # Just LoRA adapters
 # if True:
 #     model.save_pretrained_merged("model", tokenizer, save_method="lora",)
 # if True:
 #     model.push_to_hub_merged(huggingface_model_name, tokenizer, save_method="lora", token=token)
 
-# # Save to 8bit Q8_0
-# if True:
-#     model.save_pretrained_gguf("model", tokenizer,)
-# if True:
-#     model.push_to_hub_gguf(huggingface_model_name, tokenizer, token=token)
+# Save to 8bit Q8_0
+#if True:
+#    model.save_pretrained_gguf("model", tokenizer,)
+#if True:
+#    model.push_to_hub_gguf(huggingface_model_name, tokenizer, token=token)
 
 # # Save to 16bit GGUF
 # if True:
