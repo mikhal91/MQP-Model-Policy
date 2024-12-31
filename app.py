@@ -23,7 +23,7 @@ alpaca_prompt = """Below is an instruction that describes a task, paired with an
 ### Response:
 {}"""
 
-token = "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"  ## Token from huggingface for the AI Model
+token = "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"  ## Token from huggingface for the AI Model
 huggingface_model_name = "miikhal/Llama-3.1-8B-python-mqp"
 
 # 2. Before Training
