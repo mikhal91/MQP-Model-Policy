@@ -1,0 +1,8 @@
+
+*.pt
+*.md
+*.json
+*.safetensors
+*.bin
+*.pth
+*.obj
