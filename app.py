@@ -6,7 +6,7 @@ from datasets import load_dataset
 from trl import SFTTrainer
 from transformers import TrainingArguments
 from unsloth import is_bfloat16_supported
-from huggingface_hub import HfApi
+from huggingface_hub import HfApi, HfFolder
 
 # 1. Configuration
 max_seq_length = 2048
@@ -115,7 +115,7 @@ print(f"Peak reserved memory % of max memory = {used_percentage} %.")
 print(f"Peak reserved memory for training % of max memory = {lora_percentage} %.")
 
 # 5. After Training
-FastLanguageModel.for_inference(model) # Enable native 2x faster inference
+FastLanguageModel.for_inference(model) # Enable native 2x faster  
 inputs = tokenizer(
 [
     alpaca_prompt.format(
@@ -135,14 +135,21 @@ model.push_to_hub(huggingface_model_name, token = token)
 tokenizer.push_to_hub(huggingface_model_name, token = token)
 
 
+
+## Note with merging; only run first half 'save...' here and run upload model after this finishes. Upload lines work but dont show progress (takes an ungodly amount of time)
+
+
 # Merge to 16bit
 if True: model.save_pretrained_merged("model", tokenizer, save_method = "merged_16bit",)
-if True: model.push_to_hub_merged(huggingface_model_name, tokenizer, save_method = "merged_16bit", token = token)
+
+
+
+## if True: model.push_to_hub_merged(huggingface_model_name, tokenizer, save_method = "merged_16bit", token = token) ## Code breaks and doesnt do anything for like at least 30 mins. File size for first file was 4.9GB and it didnt upload at all stayed at 0%.
 
 # # Merge to 4bit
 # if True:
 #     model.save_pretrained_merged("model", tokenizer, save_method="merged_4bit",)
-# if True:
+# `if True:
 #     model.push_to_hub_merged(huggingface_model_name, tokenizer, save_method="merged_4bit", token=token)
 
 

@@ -11,7 +11,7 @@ model, tokenizer = FastLanguageModel.from_pretrained(
 FastLanguageModel.for_inference(model)
 
 model.push_to_hub_gguf(
-    "miikhal/Llama-3.1-8B-python-mqp", # Change this to your username!
+    "miikhal/Llama-3.1-8B-python-mqp",
     tokenizer,
     quantization_method = ["q4_k_m", "q8_0", "q5_k_m",],
     token = token,
