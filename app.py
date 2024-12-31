@@ -6,6 +6,7 @@ from datasets import load_dataset
 from trl import SFTTrainer
 from transformers import TrainingArguments
 from unsloth import is_bfloat16_supported
+from huggingface_hub import HfApi
 
 # 1. Configuration
 max_seq_length = 2048
@@ -22,7 +23,8 @@ alpaca_prompt = """Below is an instruction that describes a task, paired with an
 ### Response:
 {}"""
 
-huggingface_model_name = "miikhal/Llama-3.1-8B-extraction"
+token = "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"  ## Token from huggingface for the AI Model
+huggingface_model_name = "miikhal/Llama-3.1-8B-python-mqp"
 
 # 2. Before Training
 model, tokenizer = FastLanguageModel.from_pretrained(
@@ -30,7 +32,7 @@ model, tokenizer = FastLanguageModel.from_pretrained(
     max_seq_length = max_seq_length,
     dtype = dtype,
     load_in_4bit = load_in_4bit,
-    token = os.getenv("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")
+    token = token
 )
 
 FastLanguageModel.for_inference(model) # Enable native 2x faster inference
@@ -72,7 +74,7 @@ trainer = SFTTrainer(
     train_dataset = dataset,
     dataset_text_field = "text",
     max_seq_length = max_seq_length,
-    dataset_num_proc = 2,
+    dataset_num_proc = 1,
     packing = False, # Can make training 5x faster for short sequences.
     args = TrainingArguments(
         per_device_train_batch_size = 2,
@@ -117,8 +119,8 @@ FastLanguageModel.for_inference(model) # Enable native 2x faster inference
 inputs = tokenizer(
 [
     alpaca_prompt.format(
-        "Instruction Placeholder", # Replace with a valid instruction if testing
-        "Input Placeholder", # Replace with a valid input if testing
+        "Identify the causal relationships and key variables in the text.", # Replace with a valid instruction if testing
+        "The greatest upward pressure on prices comes from increased demand for housing.", # Replace with a valid input if testing
         "", # Leave this blank for generation!
     )
 ], return_tensors = "pt").to("cuda")
@@ -129,44 +131,44 @@ _ = model.generate(**inputs, streamer = text_streamer, max_new_tokens = 1000)
 # 6. Saving
 model.save_pretrained("lora_model") # Local saving
 tokenizer.save_pretrained("lora_model")
-model.push_to_hub(huggingface_model_name, token = os.getenv("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"))
-tokenizer.push_to_hub(huggingface_model_name, token = os.getenv("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"))
+model.push_to_hub(huggingface_model_name, token = token)
+tokenizer.push_to_hub(huggingface_model_name, token = token)
 
 # Merge to 16bit
 if True:
     model.save_pretrained_merged("model", tokenizer, save_method="merged_16bit",)
 if True:
-    model.push_to_hub_merged(huggingface_model_name, tokenizer, save_method="merged_16bit", token=os.getenv("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"))
+    model.push_to_hub_merged(huggingface_model_name, tokenizer, save_method="merged_16bit", token=token)
 
 # # Merge to 4bit
 # if True:
 #     model.save_pretrained_merged("model", tokenizer, save_method="merged_4bit",)
 # if True:
-#     model.push_to_hub_merged(huggingface_model_name, tokenizer, save_method="merged_4bit", token=os.getenv("HF_TOKEN"))
+#     model.push_to_hub_merged(huggingface_model_name, tokenizer, save_method="merged_4bit", token=token)
 
 # # Just LoRA adapters
 # if True:
 #     model.save_pretrained_merged("model", tokenizer, save_method="lora",)
 # if True:
-#     model.push_to_hub_merged(huggingface_model_name, tokenizer, save_method="lora", token=os.getenv("HF_TOKEN"))
+#     model.push_to_hub_merged(huggingface_model_name, tokenizer, save_method="lora", token=token)
 
 # # Save to 8bit Q8_0
 # if True:
 #     model.save_pretrained_gguf("model", tokenizer,)
 # if True:
-#     model.push_to_hub_gguf(huggingface_model_name, tokenizer, token=os.getenv("HF_TOKEN"))
+#     model.push_to_hub_gguf(huggingface_model_name, tokenizer, token=token)
 
 # # Save to 16bit GGUF
 # if True:
 #     model.save_pretrained_gguf("model", tokenizer, quantization_method="f16")
 # if True:
-#     model.push_to_hub_gguf(huggingface_model_name, tokenizer, quantization_method="f16", token=os.getenv("HF_TOKEN"))
+#     model.push_to_hub_gguf(huggingface_model_name, tokenizer, quantization_method="f16", token=token)
 
 # # Save to q4_k_m GGUF
 # if True:
 #     model.save_pretrained_gguf("model", tokenizer, quantization_method="q4_k_m")
 # if True:
-#     model.push_to_hub_gguf(huggingface_model_name, tokenizer, quantization_method="q4_k_m", token=os.getenv("HF_TOKEN"))
+#     model.push_to_hub_gguf(huggingface_model_name, tokenizer, quantization_method="q4_k_m", token=token)
 
 # # Save to multiple GGUF options - much faster if you want multiple!
 # if True:
@@ -174,5 +176,5 @@ if True:
 #         huggingface_model_name, # Change hf to your username!
 #         tokenizer,
 #         quantization_method = ["q4_k_m", "q8_0", "q5_k_m"],
-#         token = os.getenv("HF_TOKEN")
+#         token = token
 #     )
