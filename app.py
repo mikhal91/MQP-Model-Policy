@@ -142,6 +142,10 @@ tokenizer.push_to_hub(huggingface_model_name, token = token)
 # Merge to 16bit
 if True: model.save_pretrained_merged("model", tokenizer, save_method = "merged_16bit",)
 
+# Save to q4_k_m GGUF
+if True:
+    model.save_pretrained_gguf("model", tokenizer, quantization_method="q4_k_m")
+
 
 
 ## if True: model.push_to_hub_merged(huggingface_model_name, tokenizer, save_method = "merged_16bit", token = token) ## Code breaks and doesnt do anything for like at least 30 mins. File size for first file was 4.9GB and it didnt upload at all stayed at 0%.
