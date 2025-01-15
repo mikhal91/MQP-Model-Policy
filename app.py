@@ -136,15 +136,15 @@ tokenizer.push_to_hub(huggingface_model_name, token = token)
 
 
 
-## Note with merging; only run first half 'save...' here and run upload model after this finishes. Upload lines work but dont show progress (takes an ungodly amount of time)
+## Note with merging; only run first half 'save...' here and run upload model after this finishes. Upload lines work but dont show progress (takes an ungodly amount of time) Dont use q4_k_m or q5_k_m it doesnt work with my current hardware.
 
 
 # Merge to 16bit
 if True: model.save_pretrained_merged("model", tokenizer, save_method = "merged_16bit",)
 
-# Save to q4_k_m GGUF
+# Save to 8bit Q8_0
 if True:
-    model.save_pretrained_gguf("model", tokenizer, quantization_method="q4_k_m")
+    model.save_pretrained_gguf("model", tokenizer, quantization_method="q8_0")
 
 
 

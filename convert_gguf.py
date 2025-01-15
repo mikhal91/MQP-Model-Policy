@@ -13,4 +13,4 @@ FastLanguageModel.for_inference(model)
 
 
 
-model.save_pretrained_gguf("model", tokenizer, quantization_method="q4_k_m")
+model.save_pretrained_gguf("model", tokenizer, quantization_method="q8_0")
