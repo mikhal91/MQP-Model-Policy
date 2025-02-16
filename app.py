@@ -24,7 +24,7 @@ alpaca_prompt = """Below is an instruction that describes a task, paired with an
 {}"""
 
 token = "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"  ## Token from huggingface for the AI Model
-huggingface_model_name = "miikhal/Llama-3.1-8B-python-mqp"
+huggingface_model_name = "miikhal/Llama-3.1-8B-python-mqp-few"
 
 # 2. Before Training
 model, tokenizer = FastLanguageModel.from_pretrained(
@@ -50,7 +50,7 @@ def formatting_prompts_func(examples):
         texts.append(text)
     return { "text" : texts, }
 
-dataset = load_dataset("miikhal/mqp-immigration-dataset", split = "train")
+dataset = load_dataset("miikhal/mini_dataset", split = "train")
 dataset = dataset.map(formatting_prompts_func, batched = True,)
 
 # 4. Training
